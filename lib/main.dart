@@ -11,24 +11,20 @@ class CalculatorApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Calculator',
-      theme: _buildTheme(base),
+      theme: ThemeData.from(
+        colorScheme: base.colorScheme.copyWith(
+          primary: Color(0xFF8B4513),
+          secondary: Colors.orange,
+          surface: const Color(0xFFB55C44),
+        ),
+        textTheme: base.textTheme.copyWith(
+          bodyLarge: const TextStyle(color: Color(0xFF800000)),
+          bodyMedium: const TextStyle(color: Color(0xFF800000)),
+        ),
+      ).copyWith(
+        scaffoldBackgroundColor: const Color(0xFFFFE4E1),
+      ),
       home: const CalculatorUI(),
-    );
-  }
-
-  ThemeData _buildTheme(ThemeData base) {
-    return ThemeData.from(
-      colorScheme: base.colorScheme.copyWith(
-        primary: Color(0xFF8B4513),
-        secondary: Colors.orange,
-        surface: const Color(0xFFB55C44),
-      ),
-      textTheme: base.textTheme.copyWith(
-        bodyLarge: const TextStyle(color: Color(0xFF800000)),
-        bodyMedium: const TextStyle(color: Color(0xFF800000)),
-      ),
-    ).copyWith(
-      scaffoldBackgroundColor: const Color(0xFFFFE4E1),
     );
   }
 }
@@ -52,18 +48,14 @@ class _CalculatorUIState extends State<CalculatorUI> {
 
   void buttonPressed(String buttonText) {
     setState(() {
-      display = _calculateDisplay(buttonText);
+      if (buttonText == 'C') {
+        display = '0';
+      } else if (buttonText == '=') {
+        display = '0';
+      } else {
+        display = display == '0' ? buttonText : display + buttonText;
+      }
     });
-  }
-
-  String _calculateDisplay(String buttonText) {
-    if (buttonText == 'C') {
-      return '0';
-    } else if (buttonText == '=') {
-      return '0';
-    } else {
-      return display == '0' ? buttonText : display + buttonText;
-    }
   }
 
   @override
@@ -72,46 +64,34 @@ class _CalculatorUIState extends State<CalculatorUI> {
       appBar: AppBar(title: const Text('Calculator')),
       body: Column(
         children: [
-          _buildDisplay(),
-          _buildButtonGrid(),
+          Expanded(
+            child: Container(
+              alignment: Alignment.bottomRight,
+              padding: const EdgeInsets.all(24),
+              child: Text(
+                display,
+                style: const TextStyle(fontSize: 56),
+              ),
+            ),
+          ),
+          GridView.builder(
+            shrinkWrap: true,
+            itemCount: buttons.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.all(8),
+                child: ElevatedButton(
+                  onPressed: () => buttonPressed(buttons[index]),
+                  child: Text(
+                    buttons[index],
+                    style: const TextStyle(fontSize: 24),
+                  ),
+                ),
+              );
+            },
+          ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDisplay() {
-    return Expanded(
-      child: Container(
-        alignment: Alignment.bottomRight,
-        padding: const EdgeInsets.all(24),
-        child: Text(
-          display,
-          style: const TextStyle(fontSize: 56),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildButtonGrid() {
-    return GridView.builder(
-      shrinkWrap: true,
-      itemCount: buttons.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
-      itemBuilder: (context, index) {
-        return _buildButton(buttons[index]);
-      },
-    );
-  }
-
-  Widget _buildButton(String label) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: ElevatedButton(
-        onPressed: () => buttonPressed(label),
-        child: Text(
-          label,
-          style: const TextStyle(fontSize: 24),
-        ),
       ),
     );
   }
