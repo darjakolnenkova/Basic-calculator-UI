@@ -7,22 +7,22 @@ class CalculatorUI extends StatefulWidget {
   _CalculatorUIState createState() => _CalculatorUIState();
 }
 
-class _CalculatorUIState extends State<CalculatorUI> {   // класс, где описывается логика и ui
-  String display = '0';    // текущий текст
+class _CalculatorUIState extends State<CalculatorUI> {
+  String display = '0';
 
-  final List<String> buttons = const [    // список кнопок
+  final List<String> buttons = const [
     '7', '8', '9', '/',
     '4', '5', '6', 'x',
     '1', '2', '3', '-',
     'C', '0', '=', '+',
   ];
 
-  void buttonPressed(String buttonText) {   // обработка нажатия на кнопку
+  void buttonPressed(String buttonText) {
     setState(() {
       if (buttonText == 'C') {
         display = '0';
       } else if (buttonText == '=') {
-        display = '0';
+        display = '0'; // Здесь у тебя не было логики вычисления, и я её НЕ добавляю
       } else {
         display = display == '0' ? buttonText : display + buttonText;
       }
@@ -32,31 +32,31 @@ class _CalculatorUIState extends State<CalculatorUI> {   // класс, где �
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Калькулятор')),  // заголовок
-      body: Column(   // основной столбец с экраном калькулятора + кнопки
+      appBar: AppBar(title: const Text('Калькулятор')),
+      body: Column(
         children: [
           Expanded(
             child: Container(
-              alignment: Alignment.bottomRight,   // выравнивание  по нижнему правому краю
-              padding: const EdgeInsets.all(24),  // отступы
+              alignment: Alignment.bottomRight,
+              padding: const EdgeInsets.all(24),
               child: Text(
-                display,   // вывод калькулятора
+                display,
                 style: const TextStyle(fontSize: 56),
               ),
             ),
           ),
           GridView.builder(
-            shrinkWrap: true,  // - виджет будет сжиматься под размер содержимого
-            itemCount: buttons.length,   // кол-во кнопок
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),  // кол-во столбцов в сетке (4 кнопки в ряд)
+            shrinkWrap: true,
+            itemCount: buttons.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
             itemBuilder: (context, index) {
               return Padding(
-                padding: const EdgeInsets.all(8),  // отступы между кнопками
+                padding: const EdgeInsets.all(8),
                 child: ElevatedButton(
-                  onPressed: () => buttonPressed(buttons[index]),  // обработка нажатия на кнопку
+                  onPressed: () => buttonPressed(buttons[index]),
                   child: Text(
-                    buttons[index],     // текст на кнопке
-                    style: const TextStyle(fontSize: 24),   // размер текста на кнопке
+                    buttons[index],
+                    style: const TextStyle(fontSize: 24),
                   ),
                 ),
               );
